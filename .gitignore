@@ -1,0 +1,15 @@
+app
+*.exe
+*.log
+
+vendor/
+coverage/
+*.out
+
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+.env
+.env.*

@@ -1,0 +1,19 @@
+.git
+.gitignore
+.vscode
+.idea
+
+# Test e cache
+coverage/
+*.out
+
+# Binari locali
+app
+*.exe
+
+# File temporanei / OS
+*.log
+*.swp
+.DS_Store
+
+node_modules
