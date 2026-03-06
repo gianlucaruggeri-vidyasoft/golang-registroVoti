@@ -5,14 +5,13 @@ pipeline {
         timeout(time: 10, unit: 'MINUTES')
     }
 
-    environment {
+ environment {
         NOME_IMMAGINE = 'mia-api-go'
         NOME_CONTAINER = 'registro-voti-api'
         PORTA_HOST = '8082'
-        PORTA_APP = '8082' // Allineata alla porta che usi solitamente
+        PORTA_APP = '3000' 
         DB_NAME = 'registro_voti'
-        // CORREZIONE 1: Usiamo il nome del container 'demo-mongodb-1' invece dell'ID
-        MONGO_URI = 'mongodb://root:example@demo-mongodb-1:27017'
+        MONGO_URI = 'mongodb://root:secret@demo-mongodb-1:27017/?authSource=admin'
     }
 
     stages {
