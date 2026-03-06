@@ -11,7 +11,7 @@ pipeline {
         PORTA_HOST = '8082'
         PORTA_APP = '3000'
         DB_NAME = 'registro_voti'
-        MONGO_URI = 'mongodb://host.docker.internal:27017'
+        MONGO_URI = 'mongodb://83ba55f1cf3f:27017'
     }
 
     stages {

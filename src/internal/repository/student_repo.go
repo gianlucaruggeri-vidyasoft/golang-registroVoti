@@ -15,6 +15,7 @@ type StudentRepository interface {
 	Insert(ctx context.Context, student model.StudentModel) (*model.StudentModel, error)
 	GetAll(ctx context.Context) ([]model.StudentModel, error)
 	FindById(ctx context.Context, ID primitive.ObjectID) (*model.StudentModel, error)
+	AddGrade(ctx context.Context, ID primitive.ObjectID, subject string, grade float64) error
 }
 
 type StudentRepositoryImpl struct {
@@ -56,7 +57,12 @@ func (r *StudentRepositoryImpl) GetAll(ctx context.Context) ([]model.StudentMode
 func (r *StudentRepositoryImpl) AddGrade(ctx context.Context, ID primitive.ObjectID, subject string, grade float64) error {
 	filter := bson.M{"_id": ID}
 	update := bson.M{
-		"$push": bson.M{},
+		"$push": bson.M{
+			"voti": bson.M{
+				"materia": subject,
+				"voto":    grade,
+			},
+		},
 	}
 
 	_, err := r.collection.UpdateOne(ctx, filter, update)

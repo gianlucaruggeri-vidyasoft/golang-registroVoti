@@ -46,12 +46,21 @@ func RegisterBaseRoutes(app *fiber.App) {
 func RegisterServiceRoutes(app *fiber.App) {
 	api := app.Group("/api/registro")
 
-	studentCtrl := controller.NewStudentController(service.NewStudentService(repository.NewStudentRepository(mongo.SetupMongo())))
-	gradeCtrl := controller.NewGradeController(service.NewGradeService(repository.NewGradeRepository(mongo.SetupMongo()), repository.NewStudentRepository(mongo.SetupMongo())))
+	db := mongo.SetupMongo()
+
+	studentRepo := repository.NewStudentRepository(db)
+	gradeRepo := repository.NewGradeRepository(db)
+
+	studentSvc := service.NewStudentService(studentRepo)
+	gradeSvc := service.NewGradeService(gradeRepo, studentRepo)
+
+	studentCtrl := controller.NewStudentController(studentSvc)
+	gradeCtrl := controller.NewGradeController(gradeSvc)
 
 	api.Post("/studenti", studentCtrl.CreateStudent)
 	api.Get("/studenti", studentCtrl.GetAll)
 	api.Get("/studenti/:id", studentCtrl.GetOne)
+
 	api.Post("/studenti/:id/voti", gradeCtrl.CreateGrade)
 	api.Get("/studenti/:id/voti", gradeCtrl.GetGradesBySubject)
 	api.Get("/studenti/:id/voti/media", gradeCtrl.GetAverageBySubject)
