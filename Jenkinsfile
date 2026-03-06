@@ -1,5 +1,4 @@
 pipeline {
-    // Togliamo 'agent any' e usiamo 'agent none' per definire agenti specifici nei vari stage
     agent none 
 
     options {
@@ -17,10 +16,9 @@ pipeline {
 
     stages {
         stage('Esecuzione Test') {
-            // ECCO L'AGENTE: Jenkins scarica un container Go solo per questo stage
-            agent {
+         agent {
                 docker {
-                    image 'golang:1.22' // Usa la versione di Go che preferisci
+                    image 'golang:1.26' 
                     reuseNode true
                 }
             }
