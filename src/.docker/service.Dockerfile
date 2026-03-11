@@ -6,7 +6,8 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod tidy
+# SOSTITUITO TIDY CON DOWNLOAD!
+RUN go mod download
 
 COPY . .
 
