@@ -32,35 +32,37 @@ pipeline {
         }
 
         stage('Deploy (Kubernetes)') {
-            agent { label 'agent-kubectl' }
-            steps {
-                echo "Scarico il codice sull'agente Kubectl..."
-                checkout scm
+    agent { label 'agent-kubectl' }
+    steps {
+        echo "Scarico il codice sull'agente Kubectl..."
+        checkout scm
+        
+        // ATTENZIONE: Se su VS Code la cartella si chiama 'kube', cambia 'kubernetes' in 'kube' qui sotto!
+        dir('src/.docker/kubernetes') { 
+            echo "Configuro l'accesso al cluster (copia temporanea)..."
+            sh '''
+                # 1. Creiamo una cartella temporanea scrivibile nell'agente
+                mkdir -p /tmp/k8s
                 
-                dir('src/.docker/kubernetes') {
-                    echo "Configuro l'accesso al cluster (copia temporanea)..."
-                    sh '''
-                        # 1. Creiamo una cartella temporanea scrivibile nell'agente
-                        mkdir -p /tmp/k8s
-                        
-                        # 2. Copiamo il file config originale (read-only) in quella scrivibile
-                        cp /home/jenkins/.kube/config /tmp/k8s/config
-                        
-                        # 3. Diciamo a kubectl di usare la copia
-                        export KUBECONFIG=/tmp/k8s/config
-                        
-                        # 4. Modifichiamo l'indirizzo per puntare all'host Windows
-                        kubectl config set-cluster docker-desktop --server=https://host.docker.internal:6443 --insecure-skip-tls-verify=true
-                        
-                        echo "Lancio i manifest sul Cluster Kubernetes..."
-                        kubectl apply -f pod.yml
-                        kubectl apply -f service.yml
-                    '''
-                }
-            }
+                # 2. Copiamo il file config originale (read-only) in quella scrivibile
+                cp /home/jenkins/.kube/config /tmp/k8s/config
+                
+                # 3. Diciamo a kubectl di usare la copia
+                export KUBECONFIG=/tmp/k8s/config
+                
+                # 4. Modifichiamo l'indirizzo per puntare all'host Windows
+                kubectl config set-cluster docker-desktop --server=https://host.docker.internal:6443 --insecure-skip-tls-verify=true
+                
+                echo "Lancio i manifest sul Cluster Kubernetes..."
+                kubectl apply -f pod.yml
+                kubectl apply -f service.yml
+                
+                # NUOVO: Applichiamo anche l'interfaccia del database
+                kubectl apply -f mongo-express.yml
+            '''
         }
     }
-
+}
     post {
         failure {
             echo '❌ La pipeline è fallita. Controlla i log per gli errori.'
