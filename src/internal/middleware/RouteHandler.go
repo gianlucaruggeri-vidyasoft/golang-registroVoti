@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"goApp/src/internal/clients"
 	"goApp/src/internal/controller"
-	"goApp/src/internal/mongo"
 	"goApp/src/internal/repository"
 	"goApp/src/internal/service"
 
@@ -46,7 +46,7 @@ func RegisterBaseRoutes(app *fiber.App) {
 func RegisterServiceRoutes(app *fiber.App) {
 	api := app.Group("/api/registro")
 
-	db := mongo.SetupMongo()
+	db := clients.SetupMongo()
 
 	studentRepo := repository.NewStudentRepository(db)
 	gradeRepo := repository.NewGradeRepository(db)

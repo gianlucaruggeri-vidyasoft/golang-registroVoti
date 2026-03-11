@@ -1,4 +1,4 @@
-package mongo
+package clients
 
 import (
 	"context"
@@ -41,4 +41,3 @@ func SetupMongo() *mongo.Database {
 	log.Fatalf("Connessione fallita: %v", err)
 	return nil
 }
-
