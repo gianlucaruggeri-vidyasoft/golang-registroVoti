@@ -30,7 +30,23 @@ services:
     depends_on:
       - jenkins
 
+  agent-kubectl:
+    build:
+      context: .
+      dockerfile: kubectl.Dockerfile
+    container_name: jenkins-agent-kubectl
+    volumes:
+      - jenkins_agent_kubectl:/var/jenkins
+      - ~/.kube:/home/jenkins/.kube:ro
+    environment:
+      - JENKINS_URL=http://jenkins:8080
+      - JENKINS_SECRET=2ae97a66e8e9e9cfd740c73127a1e842a7f613e6d7615518cbbfd84464d5f05b
+      - JENKINS_AGENT_NAME=agent-kubectl
+    depends_on:
+      - jenkins
+
 volumes:
   jenkins_home:
   jenkins_agent_golang:
   jenkins_agent_docker:
+  jenkins_agent_kubectl:
