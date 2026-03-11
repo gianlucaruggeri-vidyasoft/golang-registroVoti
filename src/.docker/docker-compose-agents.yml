@@ -37,11 +37,13 @@ services:
     container_name: jenkins-agent-kubectl
     volumes:
       - jenkins_agent_kubectl:/var/jenkins
-      - ~/.kube:/home/jenkins/.kube:ro
+      - ${USERPROFILE}/.kube:/home/jenkins/.kube:ro
+      
     environment:
       - JENKINS_URL=http://jenkins:8080
       - JENKINS_SECRET=2ae97a66e8e9e9cfd740c73127a1e842a7f613e6d7615518cbbfd84464d5f05b
       - JENKINS_AGENT_NAME=agent-kubectl
+      - KUBECONFIG=/home/jenkins/.kube/config
     depends_on:
       - jenkins
 

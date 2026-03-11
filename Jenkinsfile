@@ -40,7 +40,7 @@ pipeline {
                 
                 dir('src/.docker/kubernetes') {
                     echo "Lancio i manifest sul Cluster Kubernetes..."
-                    // Applichiamo i file YAML al cluster
+                    sh 'kubectl config set-cluster docker-desktop --server=https://host.docker.internal:6443 --insecure-skip-tls-verify=true'
                     sh 'kubectl apply -f pod.yml'
                     sh 'kubectl apply -f service.yml'
                 }
