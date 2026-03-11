@@ -25,7 +25,7 @@ func SetupMongo() *mongo.Database {
 	for i := 0; i < 5; i++ {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		client, err = mongo.Connect(ctx, clientOptions)
-		
+
 		if err == nil {
 			err = client.Ping(ctx, nil)
 		}
@@ -41,3 +41,4 @@ func SetupMongo() *mongo.Database {
 	log.Fatalf("Connessione fallita: %v", err)
 	return nil
 }
+
