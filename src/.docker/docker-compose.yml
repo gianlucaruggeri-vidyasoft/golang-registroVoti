@@ -1,0 +1,59 @@
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    restart: always
+    ports:
+      - "4566:4566"
+    environment:
+      DEBUG: "1"
+      SERVICES: "s3"
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_URL: mongodb://root:pass@mongo:27017/?authSource=admin&w=majority
+
+  app:
+    container_name: registro-voti-api
+    build:
+      context: ../..
+      dockerfile: src/.docker/service.Dockerfile
+    restart: always
+    depends_on:
+      - mongo
+      - localstack
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DB: registro_voti
+      MONGO_URL: mongodb://root:pass@mongo:27017/registro_voti?authSource=admin&w=majority
+      AWS_ENDPOINT_URL: http://localstack:4566
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_S3_BUCKET_NAME: document-bucket
+
+volumes:
+  mongodb_data:
