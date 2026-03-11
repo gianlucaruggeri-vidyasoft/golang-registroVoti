@@ -46,7 +46,6 @@ services:
     ports:
       - "3000:3000"
     environment:
-     environment:
       PORT: 3000
       MONGO_DB: registro_voti
       MONGO_URI: mongodb://root:pass@mongo:27017/registro_voti?authSource=admin&w=majority
@@ -55,5 +54,6 @@ services:
       AWS_ACCESS_KEY_ID: test
       AWS_SECRET_ACCESS_KEY: test
       AWS_S3_BUCKET_NAME: document-bucket
+
 volumes:
   mongodb_data:
